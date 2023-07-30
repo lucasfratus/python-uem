@@ -1,2 +1,2 @@
 # python-uem
- arquivos.py de fundamentos de algoritmo
+ arquivos .py de fundamentos de algoritmo
