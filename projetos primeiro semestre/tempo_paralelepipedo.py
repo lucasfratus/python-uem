@@ -6,10 +6,11 @@
 # Tipos de dados
 # A altura e comprimento serão dados em centímetros e representados por números positivos.
 # O tempo será dado em segundos e representado por números inteiros.
-
-def tempo_paralelepipedo(comprimento: float, largura: float)-> float:
+tempo: float = 2.13
+def tempo_paralelepipedo(comprimento: float, largura: float) -> float:
   '''
-  Calcula o tempo necessário para pintar um paralelepípedo a partir de suas dimensões.
+  Calcula o tempo necessário para pintar um paralelepípedo a partir de sua área, calculada pelo produto 
+  entre *comprimento* e *altura*.
 
   Exemplos
   >>> # (10 * 8) / 2.13
@@ -17,4 +18,4 @@ def tempo_paralelepipedo(comprimento: float, largura: float)-> float:
   37.56
   '''
   area = comprimento * largura
-  return area / 2.13
+  return area / tempo
