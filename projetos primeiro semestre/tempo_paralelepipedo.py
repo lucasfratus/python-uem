@@ -7,7 +7,7 @@
 # A altura e comprimento serão dados em centímetros e representados por números positivos.
 # O tempo será dado em segundos e representado por números inteiros.
 
-tempo: float = 2.13
+tempo_por_metro_quadrado: float = 2.13
 
 def tempo_paralelepipedo(comprimento: float, largura: float) -> float:
   '''
@@ -15,9 +15,12 @@ def tempo_paralelepipedo(comprimento: float, largura: float) -> float:
   entre *comprimento* e *altura*.
 
   Exemplos
-  >>> # (10 * 8) / 2.13
-  >>> round(tempo_paralelepipedo(10,8),2)
-  37.56
+  >>> # (10 * 10) / 2.13
+  >>> round(tempo_paralelepipedo(10,10),2)
+  46.95
+  >>> # (15 * 15) / 2.13
+  >>> round(tempo_paralelepipedo(15,15),2)
+  105.63
   '''
   area = comprimento * largura
-  return area / tempo
+  return area / tempo_por_metro_quadrado
