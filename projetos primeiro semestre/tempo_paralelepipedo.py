@@ -10,17 +10,17 @@
 tempo_por_metro_quadrado: float = 2.13
 
 def tempo_paralelepipedo(comprimento: float, largura: float) -> float:
-  '''
-  Calcula o tempo necessário para pintar um paralelepípedo a partir de sua área, calculada pelo produto 
-  entre *comprimento* e *altura*.
-
-  Exemplos
-  >>> # (10 * 10) / 2.13
-  >>> round(tempo_paralelepipedo(10,10),2)
-  46.95
-  >>> # (15 * 15) / 2.13
-  >>> round(tempo_paralelepipedo(15,15),2)
-  105.63
-  '''
-  area = comprimento * largura
-  return area / tempo_por_metro_quadrado
+    '''
+    Calcula o tempo necessário para pintar um paralelepípedo a partir de sua área, calculada pelo produto 
+    entre *comprimento* e *altura*.
+  
+    Exemplos
+    >>> # (10 * 10) / 2.13
+    >>> round(tempo_paralelepipedo(10,10),2)
+    46.95
+    >>> # (15 * 15) / 2.13
+    >>> round(tempo_paralelepipedo(15,15),2)
+    105.63
+    '''
+    area = comprimento * largura
+    return area / tempo_por_metro_quadrado

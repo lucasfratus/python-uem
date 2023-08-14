@@ -7,14 +7,14 @@
 # A quantidade de caracteres movidos será um número inteiro positivo
 
 def rotacionar_string(texto: str, n: int) -> str:
-  '''
-  Rotaciona um texto *n* posições para a direita, medindo a quantidade de caracteres de um texto e considerando *n* a
-  quantidade de últimos caracteres a serem movidos para as *n* primeiras posições do texto.
+    '''
+    Rotaciona um texto *n* posições para a direita, medindo a quantidade de caracteres de um texto e considerando *n* a
+    quantidade de últimos caracteres a serem movidos para as *n* primeiras posições do texto.
 
-  Exemplos:
-  >>> rotacionar_string('Marcelo',5)
-  'rceloMa'
-  >>> rotacionar_string('Lucas',3)
-  'casLu'
-  '''
-  return texto[-n:] + texto[:-n]
+    Exemplos:
+    >>> rotacionar_string('Marcelo',5)
+    'rceloMa'
+    >>> rotacionar_string('Lucas',3)
+    'casLu'
+    '''
+    return texto[-n:] + texto[:-n]
