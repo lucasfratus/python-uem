@@ -1,6 +1,7 @@
 def qualificacao(num_questoes: int, num_acertos:int, faltas: float) -> str:
     '''
-    Indica, por meio da analise do *aproveitamento*(razao entre o numero de acertos e numero de questoes) e das *faltas*, se houve 
+    Indica, por meio da analise do *aproveitamento*(razao entre o numero de acertos 
+    e numero de questoes) e das *faltas*, se houve 
     a aprovaçao, reprovaçao ou uma possibilidade de nova tentativa do aluno.
     
     Exemplos

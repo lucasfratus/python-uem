@@ -8,7 +8,7 @@
 # O valor final é retornado em números flutuantes inteiros.
 
 
-def investimento(valor_aplicado: float) -> float:
+def invest(valor_aplicado: float) -> float:
     '''
     Calcular o rendimento de um *valor_aplicado* em um investimento em um ano. Se o *valor_aplicado* for ate 2000
     reais, o rendimento é de 10% do valor inicial. Se for entre 2000 e 5000, é 12%.E para valores maiores
@@ -24,13 +24,13 @@ def investimento(valor_aplicado: float) -> float:
     >>> investimento(5100.0)
     663.0
     '''
-    if valor_aplicado < 2000.00:
+    if valor_aplicado < 2000.0:
         valor_retornado = valor_aplicado * 10/100
 
-    elif valor_aplicado > 2000.00 and valor_aplicado < 5000.00:
+    elif valor_aplicado > 2000.0 and valor_aplicado < 5000.0:
         valor_retornado = valor_aplicado * 12/100
 
     else:
         valor_retornado = valor_aplicado * 13/100
-    
+
     return valor_retornado
