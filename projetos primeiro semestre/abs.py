@@ -1,7 +1,7 @@
 def sinal(numero:float ) -> int:
     '''
     Determina um sinal a um numero, levando em conta se o numero e' positivo, negativo ou zero.
-    Exemplos
+    Exemplos:
     >>> sinal(10)
     +1
     >>> sinal(-2)
