@@ -10,20 +10,19 @@
 from enum import Enum, auto
 class bandeira(Enum):
     '''cor da bandeira tarifaria'''
-    VERDE:auto()
-    AMARELA:auto()
-    VERMELHA1:auto()
-    VERMELHA2:auto()
+    VERDE=auto()
+    AMARELA=auto()
+    VERMELHA1=auto()
+    VERMELHA2=auto()
 
-
-def valor_energia(tarifa_original, kwh, valor_bandeira: float,bandeira_tarifaria: bandeira) -> str:
+def valor_energia(tarifa_original, kwh: float, bandeira_tarifaria: bandeira) -> float:
     '''
-    Calcula o valor final da tarifa de energia, somando o valor da *tarifa_original* com o produto \ 
-    entre o consumo em kW/h e o valor da *bandeira_tarifaria*. A bandeira tarifária possui 4 tipos: VERDE \
-    (tarifa não sofre acrescimo), AMARELA(acréscimo de R$ 0,01874 por quilowatt-hora), VERMELHA - patamar 1(acréscimo \
+    Calcula o valor final da tarifa de energia, somando o valor da *tarifa_original* com o produto  
+    entre o consumo em kWh e o valor da *bandeira_tarifaria*. A bandeira tarifária possui 4 tipos: VERDE 
+    (tarifa não sofre acrescimo), AMARELA(acréscimo de R$ 0,01874 por quilowatt-hora), VERMELHA - patamar 1(acréscimo 
     de R$ 0,03971 por quilowatt-hora) e VERMELHA - patamar 2(acréscimo de R$ 0,09492 por quilowatt-hora).
     Exemplos:
-    >>> valor_energia(100.00,10,bandeira.VERDE)
+    >>> roundvalor_energia(100.00,10.00,bandeira.VERDE)
     100.00
     >>> round(valor_energia(200.00,100.00,bandeira.AMARELA),2)
     201.87
@@ -34,9 +33,9 @@ def valor_energia(tarifa_original, kwh, valor_bandeira: float,bandeira_tarifaria
     '''
     if bandeira_tarifaria == bandeira.VERDE:
         valor_bandeira = 0
-    if bandeira_tarifaria == bandeira.AMARELA:
+    elif bandeira_tarifaria == bandeira.AMARELA:
         valor_bandeira = 0.01874
-    if bandeira_tarifaria == bandeira.VERMELHA1:
+    elif bandeira_tarifaria == bandeira.VERMELHA1:
         valor_bandeira = 0.03971
     else:
         valor_bandeira = 0.09492
