@@ -11,4 +11,11 @@ def menor_que_10(lst: list[int]) -> bool:
     Exemplos
     >>> menor_que_10([9,7,5,1])
     True
-    >>> menor_que_10()
+    >>> menor_que_10([5,8,9,10])
+    False
+    '''
+    resposta = True
+    for n in lst:
+        if n >= 10:
+            resposta = False
+    return resposta
