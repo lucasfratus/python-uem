@@ -207,11 +207,19 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
         cada_vendedor.append(Vendedor_Premiado(x.vendedor,lucro_por_vendedor))
 
     # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
-    for x in cada_vendedor
-
-    
+    indice_repetidos = []
+    for y in range(len(cada_vendedor)):
+        for z in range(y + 1,len(cada_vendedor)):
+            if cada_vendedor[y].nome == cada_vendedor[z].nome:
+                y.lucro_por_vendedor = y.lucro_por_vendedor + z.lucro_por_vendedor
+                indice_repetidos.append(z)
+    for i in range(len(indice_repetidos)):
+        cada_vendedor = cada_vendedor[:indice_repetidos(i)] + cada_vendedor[indice_repetidos(i)+1:]
+        for k in range(i+1,len(indice_repetidos)):
+            indice_repetidos[k] = indice_repetidos[k] - 1
+            
     # Ranking dos três funcionarios com maior lucro
-    lista_premiados = [nome = '', lucro_por_vendedor = 0.0]
+    lista_premiados = [Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0)]
     maior_lucro = cada_vendedor[0]
 
 
