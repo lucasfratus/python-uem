@@ -196,8 +196,10 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     assert len(relatorio) > 0
    
     # Calcula o lucro de cada vendedor
+    
     cada_vendedor = []
     for x in relatorio:
+        lucro_por_vendedor = 0
         if x.produto == TipoProduto.BOBINA:
             lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
@@ -219,7 +221,16 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
             indice_repetidos[k] = indice_repetidos[k] - 1
             
     # Ranking dos três funcionarios com maior lucro
-    lista_premiados = [Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0)]
-    maior_lucro = cada_vendedor[0]
+    lista_premiados = [Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0),
+                       Vendedor_Premiado(nome = '', lucro_por_vendedor = 0.0)]
+    
+    # Definindo o com maior lucro
+    for v in range(len(cada_vendedor)):
+        for b in range(v + 1, len(cada_vendedor)):
+            if cada_vendedor[v].lucro_por_vendedor > cada_vendedor[b].lucro_por_vendedor:
+                lista_premiados[v] = [Vendedor_Premiado(cada_vendedor[v].nome,cada_vendedor[v].lucro_por_vendedor)]
+
+    return lista_premiados
+
 
 
