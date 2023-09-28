@@ -87,3 +87,27 @@ for i in range(len(indice_repetidos)):
     cada_vendedor = cada_vendedor[:indice_repetidos(i)] + cada_vendedor[indice_repetidos(i)+1:]
     for k in range(i+1,len(indice_repetidos)):
         indice_repetidos[k] = indice_repetidos[k] - 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+            # Definindo o segundo com maior lucro
+    for s in range(len(cada_vendedor)) and s != v:
+        for s1 in range(s + 1, len(cada_vendedor)):
+            if cada_vendedor[s].lucro_por_vendedor > cada_vendedor[s1].lucro_por_vendedor:
+                lista_premiados[1] = [Vendedor_Premiado(cada_vendedor[s].nome,cada_vendedor[s].lucro_por_vendedor)]
+    
+    # Definindo o terceiro com maior lucro
+    for o in range(len(cada_vendedor)) and o != v and o != s:
+        for o1 in range(o + 1, len(cada_vendedor)):
+            if cada_vendedor[o].lucro_por_vendedor > cada_vendedor[o1].lucro_por_vendedor:
+                lista_premiados[2] = [Vendedor_Premiado(cada_vendedor[o].nome,cada_vendedor[o].lucro_por_vendedor)]
