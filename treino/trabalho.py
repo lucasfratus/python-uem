@@ -214,17 +214,36 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
         cada_vendedor.append(Vendedor_Premiado(x.vendedor,lucro_por_vendedor))
 
     # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
-    indice_repetidos = []
+    indice_repetidos_desordenados = []
     for y in range(len(cada_vendedor)):
         for z in range(y + 1,len(cada_vendedor)):
             if cada_vendedor[y].nome == cada_vendedor[z].nome:
                 cada_vendedor[y].lucro_por_vendedor = cada_vendedor[y].lucro_por_vendedor + cada_vendedor[z].lucro_por_vendedor
-                indice_repetidos.append(z)
+                incluso = False
+                for indice in indice_repetidos_desordenados:
+                    if z == indice:
+                        incluso = True
+                if incluso == False:
+                    indice_repetidos_desordenados.append(z)
+    
+    indice_repetidos_ordenados = []
+    while indice_repetidos_desordenados:
+        menor_valor = indice_repetidos_desordenados[0]
+        for x in indice_repetidos_desordenados:
+            if x < menor_valor:
+                menor_valor = x
+            indice_repetidos_ordenados.append(menor_valor)
+            for i in range(len(indice_repetidos_desordenados)):
+                indice_repetidos_desordenados = cada_vendedor[:indice_repetidos_desordenados[i]] + cada_vendedor[indice_repetidos_desordenados[i] + 1:]
+                for k in range(i+1,len(indice_repetidos_desordenados)):
+                    indice_repetidos_desordenados[k] = indice_repetidos_desordenados[k] - 1
+                
 
-    for i in range(len(indice_repetidos)):
-        cada_vendedor = cada_vendedor[:indice_repetidos[i]] + cada_vendedor[indice_repetidos[i] + 1:]
-        for k in range(i+1,len(indice_repetidos)):
-            indice_repetidos[k] = indice_repetidos[k] - 1
+
+    #for i in range(len(indice_repetidos_ordenados)):
+        #cada_vendedor = cada_vendedor[:indice_repetidos_ordenados[i]] + cada_vendedor[indice_repetidos_ordenados[i] + 1:]
+        #for k in range(i+1,len(indice_repetidos_ordenados)):
+            #indice_repetidos_ordenados[k] = indice_repetidos_ordenados[k] - 1
 
     # Define o ranking dos três vendedores que mais geraram lucro
     posicao1 = Vendedor_Premiado('',0.0)

@@ -204,52 +204,21 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     # Calcula o lucro de cada vendedor
     cada_vendedor = []
     for x in relatorio:
-        lucro_por_vendedor = 0.0
         if x.produto == TipoProduto.BOBINA:
-            lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
+            lucro_por_vendedor = x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
-            lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
+            lucro_por_vendedor = x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
-            lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL)
+            lucro_por_vendedor = x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL)
         cada_vendedor.append(Vendedor_Premiado(x.vendedor,lucro_por_vendedor))
 
-    # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
-    #indice_repetidos = []
-        # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
-    indice_repetidos_desordenados = []
-    for y in range(len(cada_vendedor)):
-        for z in range(y + 1,len(cada_vendedor)):
-            if cada_vendedor[y].nome == cada_vendedor[z].nome:
-                cada_vendedor[y].lucro_por_vendedor = cada_vendedor[y].lucro_por_vendedor + cada_vendedor[z].lucro_por_vendedor
-                incluso = False
-                for indice in indice_repetidos_desordenados:
-                    if z == indice:
-                        incluso = True
-                if incluso == False:
-                    indice_repetidos_desordenados.append(z)
-    
-    indice_repetidos_ordenados = []
-    while indice_repetidos_desordenados:
-        menor_valor = indice_repetidos_desordenados[0]
-        for x in indice_repetidos_desordenados:
-            if x < menor_valor:
-                menor_valor = x
-            for y in range(indice_repetidos_desordenados):
-                indice_repetidos_desordenados[:y] + indice_repetidos_desordenados[y+1:]
-            indice_repetidos_ordenados.append(menor_valor)
-    
-    
-    #for y in range(len(cada_vendedor)):
-        #for z in range(y + 1,len(cada_vendedor)):
-            #if cada_vendedor[y].nome == cada_vendedor[z].nome:
-                #cada_vendedor[y].lucro_por_vendedor = cada_vendedor[y].lucro_por_vendedor + cada_vendedor[z].lucro_por_vendedor
-                #indice_repetidos.append(z)
-
-    #for i in range(len(indice_repetidos)):
-        #cada_vendedor = cada_vendedor[:indice_repetidos[i]] + cada_vendedor[indice_repetidos[i] + 1:]
-        #for k in range(i+1,len(indice_repetidos)):
-            #indice_repetidos[k] = indice_repetidos[k] - 1
-
+    for cv in range(len(cada_vendedor)):
+        for v in range(cv + 1, len(cada_vendedor)):
+            if cada_vendedor[cv].nome == cada_vendedor[v].nome:
+                cada_vendedor[cv].lucro_por_vendedor = cada_vendedor[cv].lucro_por_vendedor + \
+                cada_vendedor[v].lucro_por_vendedor
+                cada_vendedor[v].lucro_por_vendedor = 0.0 # zera o lucro da proxima vez que o mesmo vendedor aparece.
+            
     # Define o ranking dos três vendedores que mais geraram lucro
     posicao1 = Vendedor_Premiado('',0.0)
     posicao2 = Vendedor_Premiado('',0.0)

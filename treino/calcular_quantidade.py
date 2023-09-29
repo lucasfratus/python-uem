@@ -18,3 +18,12 @@ else:
     custo = 75.0
 
 print (lucro / (preço - custo))
+
+
+
+
+
+maior_lucro = 0
+for i in range(lista):
+    if lista[i].lucro_por_vendedor > maior_lucro:
+        maior_lucro = lista[i].lucro_por_vendedor
