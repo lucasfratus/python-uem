@@ -175,6 +175,7 @@ class Vendedor_Premiado:
     '''
     nome: str
     lucro_por_vendedor: float
+    soma_quantidades: int
 
 
 def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
@@ -186,18 +187,28 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     
     Exemplos:
     >>> premiados([Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
-    [Vendedor_Premiado(nome='Lucas', lucro_por_vendedor=100000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
+    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Fabio',TipoProduto.PAINEL,16000,80.00),Nota('Jair',TipoProduto.CHAPA,12000,45.00)])
+<<<<<<< Updated upstream
     [Vendedor_Premiado(nome='Fabio', lucro_por_vendedor=80000.0), Vendedor_Premiado(nome='Jair', lucro_por_vendedor=60000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
     
+=======
+    [Vendedor_Premiado(nome='Fabio', soma_quantidades=16000, lucro_por_vendedor=80000.0), Vendedor_Premiado(nome='Jair', soma_quantidades=0, lucro_por_vendedor=60000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+>>>>>>> Stashed changes
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00)])        
-    [Vendedor_Premiado(nome='Marcia', lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='Paulo', lucro_por_vendedor=170000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
+    [Vendedor_Premiado(nome='Marcia', soma_quantidades=0, lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='Paulo', soma_quantidades=0, lucro_por_vendedor=170000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00),Nota('Paulo',TipoProduto.CHAPA,8000,45.00)])
-    [Vendedor_Premiado(nome='Paulo', lucro_por_vendedor=210000.0), Vendedor_Premiado(nome='Marcia', lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
+    [Vendedor_Premiado(nome='Paulo', soma_quantidades=0, lucro_por_vendedor=210000.0), Vendedor_Premiado(nome='Marcia', soma_quantidades=0, lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00)]) 
+<<<<<<< Updated upstream
     [Vendedor_Premiado(nome='Lucia', lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', lucro_por_vendedor=145000.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.PAINEL,16000,55.00)])
     [Vendedor_Premiado(nome='pAU', lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', lucro_por_vendedor=145000.0)]
+=======
+    [Vendedor_Premiado(nome='Lucia', soma_quantidades=0, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=0, lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', soma_quantidades=0, lucro_por_vendedor=145000.0)]
+    >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00)])
+    [Vendedor_Premiado(nome='Lucia', soma_quantidades=0, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=0, lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', soma_quantidades=0, lucro_por_vendedor=145000.0)]
+>>>>>>> Stashed changes
     '''
 
     assert len(relatorio) > 0
@@ -206,22 +217,25 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     cada_vendedor = []
     for x in relatorio:
         lucro_por_vendedor = 0.0
+        soma_quantidades = 0.0
         if x.produto == TipoProduto.BOBINA:
             lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
             lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
             lucro_por_vendedor = lucro_por_vendedor + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL)
-        cada_vendedor.append(Vendedor_Premiado(x.vendedor,lucro_por_vendedor))
+        soma_quantidades = soma_quantidades + x.quantidade
+        cada_vendedor.append(Vendedor_Premiado(x.vendedor, soma_quantidades, lucro_por_vendedor))
 
     # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
     #indice_repetidos = []
         # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
     indice_repetidos_desordenados = []
     for y in range(len(cada_vendedor)):
-        for z in range(y + 1,len(cada_vendedor)):
+        for z in range(y + 1, len(cada_vendedor)):
             if cada_vendedor[y].nome == cada_vendedor[z].nome:
                 cada_vendedor[y].lucro_por_vendedor = cada_vendedor[y].lucro_por_vendedor + cada_vendedor[z].lucro_por_vendedor
+<<<<<<< Updated upstream
                 incluso = False
                 for indice in indice_repetidos_desordenados:
                     if z == indice:
@@ -250,6 +264,14 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
         #cada_vendedor = cada_vendedor[:indice_repetidos[i]] + cada_vendedor[indice_repetidos[i] + 1:]
         #for k in range(i+1,len(indice_repetidos)):
             #indice_repetidos[k] = indice_repetidos[k] - 1
+=======
+                indice_repetidos.append(z)
+    
+    for i in range(len(indice_repetidos)):
+        cada_vendedor = cada_vendedor[:indice_repetidos[i]] + cada_vendedor[indice_repetidos[i] + 1:]
+        for k in range(i+1,len(indice_repetidos)):
+            indice_repetidos[k] = indice_repetidos[k] - 1
+>>>>>>> Stashed changes
 
     # Define o ranking dos três vendedores que mais geraram lucro
     posicao1 = Vendedor_Premiado('',0.0)

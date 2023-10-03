@@ -44,7 +44,6 @@ def totaliza_pedidos(pedidos: list[Pedido]) -> Totalizacao:
     >>> totaliza_pedidos([Pedido(1,3,2)])
     Totalizacao(total_bobinas=1, total_chapas=3, total_paineis=2)
     '''
-
     demanda = Totalizacao(0,0,0)
     for x in pedidos:
         demanda.total_bobinas = demanda.total_bobinas + x.pedido_bobinas
@@ -141,33 +140,33 @@ def receita_lucro(relatorio: list[Nota]) -> float:
     
     Exemplos:
     >>> receita_lucro([])
-    Receita = 0, Lucro = 0
+    (0, 0)
     >>> receita_lucro([Nota('Claudio',TipoProduto.BOBINA,5000,50.00)])
-    Receita = 250000.0, Lucro = 0.0
+    (250000.0, 0.0)
     >>> receita_lucro([Nota('Lucas',TipoProduto.BOBINA,10000,53.00)])
-    Receita = 530000.0, Lucro = 30000.0
+    (530000.0, 30000.0)
     >>> receita_lucro([Nota('Pedro',TipoProduto.PAINEL,5000,85.00),Nota('Pedro',TipoProduto.CHAPA,4000,45.00)])
-    Receita = 605000.0, Lucro = 70000.0
+    (605000.0, 70000.0)
     >>> receita_lucro([Nota('Pedro',TipoProduto.BOBINA,1500,55.00),Nota('Daniela',TipoProduto.PAINEL,3000,80.00),Nota('Jonas',TipoProduto.CHAPA,1000,41.00)])
-    Receita = 363500.0, Lucro = 23500.0
+    (363500.0, 23500.0)
     >>> receita_lucro([Nota('Jaime',TipoProduto.PAINEL,2530,80.00),Nota('Daniel',TipoProduto.BOBINA,1000,52.00),Nota('Jaime',TipoProduto.PAINEL,2000,85.00)])
-    Receita = 424400.0, Lucro = 34650.0
+    (424400.0, 34650.0)
     '''
     receita = 0
     lucro_total = 0
 
     for x in relatorio:
-        receita = x.quantidade * x.valor_com_desconto
+        receita = receita + x.quantidade * x.valor_com_desconto
         if x.produto == TipoProduto.BOBINA:
-            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
+            lucro_total = lucro_total + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
-            lucro_total =  + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
+            lucro_total =  lucro_total + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
-            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
+            lucro_total = lucro_total + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
     return receita,lucro_total
 
 @dataclass
-class Vendedor_Premiado:
+class Vendedor_Candidato:
     ''' 
     Representa cada vendedor candidato ao prêmio, indicando seu nome, quantidade de produtos vendida e lucro mensal.
     '''
@@ -175,16 +174,16 @@ class Vendedor_Premiado:
     soma_quantidades: int
     lucro_por_vendedor: float
 
-def lucro_vendedor(nota_vendedor: Nota) -> Vendedor_Premiado:
+def lucro_vendedor(nota_vendedor: Nota) -> Vendedor_Candidato:
     '''
     Calcula o lucro de um vendedor a partir de *nota_vendedor*, que contém seu nome, o produto vendido, a quantidade e o valor com desconto.
     Exemplos:
     >>> lucro_vendedor(Nota('Pedro',TipoProduto.BOBINA,3200,55.00))
-    Vendedor_Premiado(nome='Pedro', soma_quantidades=3200, lucro_por_vendedor=16000.0)
+    Vendedor_Candidato(nome='Pedro', soma_quantidades=3200, lucro_por_vendedor=16000.0)
     >>> lucro_vendedor(Nota('Gabriel',TipoProduto.BOBINA,0,0.0))
-    Vendedor_Premiado(nome='Gabriel', soma_quantidades=0, lucro_por_vendedor=0.0)
+    Vendedor_Candidato(nome='Gabriel', soma_quantidades=0, lucro_por_vendedor=0.0)
     >>> lucro_vendedor(Nota('',TipoProduto.BOBINA,0,0.0))
-    Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)
+    Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)
     '''
     lucro_por_vendedor = 0.0
     if nota_vendedor.produto == TipoProduto.BOBINA:
@@ -193,93 +192,138 @@ def lucro_vendedor(nota_vendedor: Nota) -> Vendedor_Premiado:
         lucro_por_vendedor = nota_vendedor.quantidade * (nota_vendedor.valor_com_desconto - CUSTO_CHAPA)
     else: # lucro_por_vendedor.produto == Tipo.Produto.PAINEL
         lucro_por_vendedor = nota_vendedor.quantidade * (nota_vendedor.valor_com_desconto - CUSTO_PAINEL)
-    return Vendedor_Premiado(nota_vendedor.vendedor,nota_vendedor.quantidade,lucro_por_vendedor)
+    return Vendedor_Candidato(nota_vendedor.vendedor,nota_vendedor.quantidade,lucro_por_vendedor)
 
-def repeticao_vendedor(lst: list[Vendedor_Premiado]) -> list[Vendedor_Premiado]:
+def repeticao_vendedor(lst: list[Vendedor_Candidato]) -> list[Vendedor_Candidato]:
     '''
     Verifica se um vendedor de *lst* aparece mais de uma vez. Caso apareça, soma os lucros das outras ocorrências na primeira ocorrência.
     Exemplos
-    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
-    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0)]
-    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00),Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
-    [Vendedor_Premiado(nome='Lucas', soma_quantidades=40000, lucro_por_vendedor=200000.0)]
-    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00),Nota('Fabio',TipoProduto.BOBINA,20000,55.00)])
-    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0),Vendedor_Premiado(nome='Fabio', soma_quantidades=20000, lucro_por_vendedor=100000.0)
+    >>> repeticao_vendedor([Vendedor_Candidato('Lucas',20000,100000.0)])
+    [Vendedor_Candidato(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0)]
+    >>> repeticao_vendedor([Vendedor_Candidato('Lucas',20000,100000.0),Vendedor_Candidato('Lucas',2000,10000.0)])
+    [Vendedor_Candidato(nome='Lucas', soma_quantidades=22000, lucro_por_vendedor=110000.0), Vendedor_Candidato(nome='Lucas', soma_quantidades=0.0, lucro_por_vendedor=0.0)]
+    >>> repeticao_vendedor([Vendedor_Candidato('Lucas',20000,100000.0),Vendedor_Candidato('Fabio',20000,100000.0)])
+    [Vendedor_Candidato(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0), Vendedor_Candidato(nome='Fabio', soma_quantidades=20000, lucro_por_vendedor=100000.0)]
     '''
-    cada_vendedor = []
-    for x in lst:
-        lucro_vendedor(x)
-        cada_vendedor.append(lucro_vendedor(x))
+    #for x in lst:
+        #lucro_vendedor(x)
+        #cada_vendedor.append(lucro_vendedor(x))
     
     if len(lst) > 1:
-        for cv in range(len(cada_vendedor)):
-            for v in range(cv + 1, len(cada_vendedor)):
-                if cada_vendedor[cv].nome == cada_vendedor[v].nome:
-                    cada_vendedor[cv].lucro_por_vendedor = cada_vendedor[cv].lucro_por_vendedor + \
-                    cada_vendedor[v].lucro_por_vendedor
-                    cada_vendedor[cv].soma_quantidades = cada_vendedor[cv].soma_quantidades + \
-                    cada_vendedor[v].soma_quantidades
-                    cada_vendedor[v].lucro_por_vendedor = 0.0  # Zera o lucro das próximas vezes que o mesmo vendedor aparece.
-                    cada_vendedor[v].soma_quantidades = 0.0  # Zera a quantidade das próximas vezes que o mesmo vendedor aparece
-    return cada_vendedor
-                    
+        for cv in range(len(lst)):
+            for v in range(cv + 1, len(lst)):
+                if lst[cv].nome == lst[v].nome:
+                    lst[cv].lucro_por_vendedor = lst[cv].lucro_por_vendedor + \
+                    lst[v].lucro_por_vendedor
+                    lst[cv].soma_quantidades = lst[cv].soma_quantidades + \
+                    lst[v].soma_quantidades
+                    lst[v].lucro_por_vendedor = 0.0  # Zera o lucro das próximas vezes que o mesmo vendedor aparece.
+                    lst[v].soma_quantidades = 0.0  # Zera a quantidade das próximas vezes que o mesmo vendedor aparece
+    return lst
+
+def maior(lst1: list[Vendedor_Candidato]) -> Vendedor_Candidato:
+    '''
+    Encontra o vendedor de *lst* com o maior lucro.
+    Exemplos:
+    >>> maior([])
+    Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)
+    >>> maior([Vendedor_Candidato('Lucas',20000,100000.0)])
+    Vendedor_Candidato(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0)
+    >>> maior([Vendedor_Candidato('Carlos',30000,150000.0), Vendedor_Candidato('Luan',28000,140000.0), Vendedor_Candidato('Lucia',32000,160000.0), Vendedor_Candidato('Fabricio',29000,145000.0)]) 
+    Vendedor_Candidato(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0)
+    '''
+    #for x in lst1:
+        #lucro_vendedor(x)
+        #lst.append(lucro_vendedor(x))
+
+    maior_de_todos = Vendedor_Candidato('',0,0.0)
+    for x in range(len(lst1)):
+        if lst1[x].lucro_por_vendedor > maior_de_todos.lucro_por_vendedor and \
+            lst1[x].lucro_por_vendedor > 0.0:
+            maior_de_todos = lst1[x]
+    
+    return maior_de_todos
+
+def indice_maior(lst2: list[Vendedor_Candidato]) -> int:
+    '''
+    Encontra o indice do vendedor de maior lucro de *lst*
+    Exemplos:
+    >>> indice_maior([Vendedor_Candidato('Lucas',20000,100000.0)])
+    0
+    >>> indice_maior([Vendedor_Candidato('Carlos',30000,150000.0), Vendedor_Candidato('Luan',28000,140000.0), Vendedor_Candidato('Lucia',32000,160000.0), Vendedor_Candidato('Fabricio',29000,145000.0)]) 
+    2
+    >>> indice_maior([Vendedor_Candidato('Lucas',20000,100000.0),Vendedor_Candidato('Lucas', 20000, 100000.0)])
+    0
+    '''
+    i_maior_de_todos = 0
+    if len(lst2) > 1:
+        for x in range(len(lst2)):
+            if lst2[x].lucro_por_vendedor > lst2[i_maior_de_todos].lucro_por_vendedor:
+                i_maior_de_todos = x
+    else:
+        i_maior_de_todos
+
+    return i_maior_de_todos
  
-def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
+def premiados(relatorio: list[Nota]) -> list[Vendedor_Candidato]:
     '''
     Determina, a partir de *relatorio*, os três vendedores que mais geraram lucro no mês, devolvendo uma nova lista. 
     Caso apareça mais de uma nota de um único vendedor em *relatorio*, 
     o lucro dessas notas é somado e levado em consideração quando os três vendedores forem determinados.
     *relatorio* não pode ser uma lista vazia.
-    Não pode haver um empate dos lucros dos vendedores.
+    Caso haja um empate entre os lucros de vendedores, a ordem deles no ranking será igual a ordem deles em *relatorio*.
     
     Exemplos:
+    >>> premiados([])
+    [Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
-    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Fabio',TipoProduto.PAINEL,16000,80.00),Nota('Jair',TipoProduto.CHAPA,12000,45.00)])
-    [Vendedor_Premiado(nome='Fabio', soma_quantidades=16000, lucro_por_vendedor=80000.0), Vendedor_Premiado(nome='Jair', soma_quantidades=12000, lucro_por_vendedor=60000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Fabio', soma_quantidades=16000, lucro_por_vendedor=80000.0), Vendedor_Candidato(nome='Jair', soma_quantidades=12000, lucro_por_vendedor=60000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Pedro',TipoProduto.BOBINA,40000,55.00),Nota('Pedro',TipoProduto.PAINEL,20000,85.00)])
-    [Vendedor_Premiado(nome='Pedro', soma_quantidades=60000, lucro_por_vendedor=400000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Pedro', soma_quantidades=60000, lucro_por_vendedor=400000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00)])        
-    [Vendedor_Premiado(nome='Marcia', soma_quantidades=40000, lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='Paulo', soma_quantidades=34000, lucro_por_vendedor=170000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Marcia', soma_quantidades=40000, lucro_por_vendedor=200000.0), Vendedor_Candidato(nome='Paulo', soma_quantidades=34000, lucro_por_vendedor=170000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00),Nota('Paulo',TipoProduto.CHAPA,8000,45.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00)])
-    [Vendedor_Premiado(nome='Marcia', soma_quantidades=56000, lucro_por_vendedor=280000.0), Vendedor_Premiado(nome='Paulo', soma_quantidades=42000, lucro_por_vendedor=210000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Marcia', soma_quantidades=56000, lucro_por_vendedor=280000.0), Vendedor_Candidato(nome='Paulo', soma_quantidades=42000, lucro_por_vendedor=210000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00),Nota('Paulo',TipoProduto.CHAPA,8000,45.00)])
-    [Vendedor_Premiado(nome='Paulo', soma_quantidades=42000, lucro_por_vendedor=210000.0), Vendedor_Premiado(nome='Marcia', soma_quantidades=40000, lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
+    [Vendedor_Candidato(nome='Paulo', soma_quantidades=42000, lucro_por_vendedor=210000.0), Vendedor_Candidato(nome='Marcia', soma_quantidades=40000, lucro_por_vendedor=200000.0), Vendedor_Candidato(nome='', soma_quantidades=0, lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00)]) 
-    [Vendedor_Premiado(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', soma_quantidades=29000, lucro_por_vendedor=145000.0)]
+    [Vendedor_Candidato(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Candidato(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0), Vendedor_Candidato(nome='Fabricio', soma_quantidades=29000, lucro_por_vendedor=145000.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00)])
-    [Vendedor_Premiado(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', soma_quantidades=29000, lucro_por_vendedor=145000.0)]
+    [Vendedor_Candidato(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Candidato(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0), Vendedor_Candidato(nome='Fabricio', soma_quantidades=29000, lucro_por_vendedor=145000.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00),Nota('Paulo',TipoProduto.BOBINA,28000,55.00)])
-    [Vendedor_Premiado(nome='Paulo', soma_quantidades=56000, lucro_por_vendedor=280000.0), Vendedor_Premiado(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0)]
+    [Vendedor_Candidato(nome='Paulo', soma_quantidades=56000, lucro_por_vendedor=280000.0), Vendedor_Candidato(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Candidato(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0)]
+    >>> premiados([Nota('Carlos',TipoProduto.BOBINA,28000,55.00),Nota('Luan',TipoProduto.BOBINA,28000,55.00), Nota('Lucia',TipoProduto.BOBINA,28000,55.00), Nota('Fabricio',TipoProduto.BOBINA,28000,55.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00),Nota('Cesar',TipoProduto.BOBINA,28000,55.00)])
+    [Vendedor_Candidato(nome='Carlos', soma_quantidades=28000, lucro_por_vendedor=140000.0), Vendedor_Candidato(nome='Luan', soma_quantidades=28000, lucro_por_vendedor=140000.0), Vendedor_Candidato(nome='Lucia', soma_quantidades=28000, lucro_por_vendedor=140000.0)]
     '''
-    assert len(relatorio) > 0
-    cada_vendedor = repeticao_vendedor(relatorio)
+
+    
+    relatorio_definitivo = []
+    
+    for x in relatorio:
+        lucro_vendedor(x)
+        relatorio_definitivo.append(lucro_vendedor(x))
+    cada_vendedor = repeticao_vendedor(relatorio_definitivo)
 
     ranking = []
-    posicao1 = Vendedor_Premiado('',0,0.0)
-    posicao2 = Vendedor_Premiado('',0,0.0)
-    posicao3 = Vendedor_Premiado('',0,0.0)
-    
-    #Define o vendedor da primeira posição
-    for vnd in range(len(cada_vendedor)):
-        if cada_vendedor[vnd].lucro_por_vendedor > posicao1.lucro_por_vendedor and \
-            cada_vendedor[vnd].lucro_por_vendedor > 0.0:
-            posicao1 = cada_vendedor[vnd]
+
+    # Definindo o primeiro do rank:
+    posicao1= maior(cada_vendedor)
+    indice_p1 = indice_maior(cada_vendedor)
+    cada_vendedor = cada_vendedor[:indice_p1] + cada_vendedor[indice_p1+1:]
     ranking.append(posicao1)
-    # Define o vendedor da segunda posição
-    for vnd1 in range(len(cada_vendedor)): 
-        if cada_vendedor[vnd1].lucro_por_vendedor > posicao2.lucro_por_vendedor and \
-              cada_vendedor[vnd1].lucro_por_vendedor < posicao1.lucro_por_vendedor and \
-                cada_vendedor[vnd1].lucro_por_vendedor > 0.0:
-            posicao2 = cada_vendedor[vnd1]
+
+    # Definindo o segundo do rank
+    posicao2= maior(cada_vendedor)
+    indice_p2 = indice_maior(cada_vendedor)
+    cada_vendedor = cada_vendedor[:indice_p2] + cada_vendedor[indice_p2+1:]
     ranking.append(posicao2)
-    # Define o vendedor da terceira posição
-    for vnd2 in range(len(cada_vendedor)):
-        if cada_vendedor[vnd2].lucro_por_vendedor > posicao3.lucro_por_vendedor and \
-            cada_vendedor[vnd2].lucro_por_vendedor < posicao2.lucro_por_vendedor and \
-                cada_vendedor[vnd2].lucro_por_vendedor > 0.0:
-            posicao3 = cada_vendedor[vnd2]
+
+    # Definindo o terceiro do rank
+    posicao3= maior(cada_vendedor)
     ranking.append(posicao3)
+
     return ranking
 
 
