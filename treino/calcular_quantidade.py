@@ -18,7 +18,3 @@ else:
     custo = 75.0
 
 print (lucro / (preço - custo))
-
-
-
-premiados([Nota('Fabio',TipoProduto.BOBINA,3200,55.00),Nota('Jair',TipoProduto.CHAPA,1600,45.00)])

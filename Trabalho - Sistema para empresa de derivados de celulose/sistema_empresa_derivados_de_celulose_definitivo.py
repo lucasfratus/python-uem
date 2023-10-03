@@ -297,8 +297,6 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Candidato]:
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,28000,55.00),Nota('Luan',TipoProduto.BOBINA,28000,55.00), Nota('Lucia',TipoProduto.BOBINA,28000,55.00), Nota('Fabricio',TipoProduto.BOBINA,28000,55.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00),Nota('Cesar',TipoProduto.BOBINA,28000,55.00)])
     [Vendedor_Candidato(nome='Carlos', soma_quantidades=28000, lucro_por_vendedor=140000.0), Vendedor_Candidato(nome='Luan', soma_quantidades=28000, lucro_por_vendedor=140000.0), Vendedor_Candidato(nome='Lucia', soma_quantidades=28000, lucro_por_vendedor=140000.0)]
     '''
-
-    
     relatorio_definitivo = []
     
     for x in relatorio:
