@@ -154,17 +154,17 @@ def receita_lucro(relatorio: list[Nota]) -> float:
     Receita = 424400.0, Lucro = 34650.0
     '''
     receita = 0
-    lucro = 0
+    lucro_total = 0
 
     for x in relatorio:
-        receita = receita + x.quantidade * x.valor_com_desconto
+        receita = x.quantidade * x.valor_com_desconto
         if x.produto == TipoProduto.BOBINA:
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
+            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
+            lucro_total =  + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
-    return print('Receita = ', receita, ', Lucro = ', lucro, sep='')
+            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
+    return receita,lucro_total
 
 @dataclass
 class Vendedor_Premiado:
@@ -195,6 +195,34 @@ def lucro_vendedor(nota_vendedor: Nota) -> Vendedor_Premiado:
         lucro_por_vendedor = nota_vendedor.quantidade * (nota_vendedor.valor_com_desconto - CUSTO_PAINEL)
     return Vendedor_Premiado(nota_vendedor.vendedor,nota_vendedor.quantidade,lucro_por_vendedor)
 
+def repeticao_vendedor(lst: list[Vendedor_Premiado]) -> list[Vendedor_Premiado]:
+    '''
+    Verifica se um vendedor de *lst* aparece mais de uma vez. Caso apareça, soma os lucros das outras ocorrências na primeira ocorrência.
+    Exemplos
+    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
+    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0)]
+    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00),Nota('Lucas',TipoProduto.BOBINA,20000,55.00)])
+    [Vendedor_Premiado(nome='Lucas', soma_quantidades=40000, lucro_por_vendedor=200000.0)]
+    >>> repeticao_vendedor([Nota('Lucas',TipoProduto.BOBINA,20000,55.00),Nota('Fabio',TipoProduto.BOBINA,20000,55.00)])
+    [Vendedor_Premiado(nome='Lucas', soma_quantidades=20000, lucro_por_vendedor=100000.0),Vendedor_Premiado(nome='Fabio', soma_quantidades=20000, lucro_por_vendedor=100000.0)
+    '''
+    cada_vendedor = []
+    for x in lst:
+        lucro_vendedor(x)
+        cada_vendedor.append(lucro_vendedor(x))
+    
+    if len(lst) > 1:
+        for cv in range(len(cada_vendedor)):
+            for v in range(cv + 1, len(cada_vendedor)):
+                if cada_vendedor[cv].nome == cada_vendedor[v].nome:
+                    cada_vendedor[cv].lucro_por_vendedor = cada_vendedor[cv].lucro_por_vendedor + \
+                    cada_vendedor[v].lucro_por_vendedor
+                    cada_vendedor[cv].soma_quantidades = cada_vendedor[cv].soma_quantidades + \
+                    cada_vendedor[v].soma_quantidades
+                    cada_vendedor[v].lucro_por_vendedor = 0.0  # Zera o lucro das próximas vezes que o mesmo vendedor aparece.
+                    cada_vendedor[v].soma_quantidades = 0.0  # Zera a quantidade das próximas vezes que o mesmo vendedor aparece
+    return cada_vendedor
+                    
  
 def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     '''
@@ -225,52 +253,34 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     [Vendedor_Premiado(nome='Paulo', soma_quantidades=56000, lucro_por_vendedor=280000.0), Vendedor_Premiado(nome='Lucia', soma_quantidades=32000, lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', soma_quantidades=30000, lucro_por_vendedor=150000.0)]
     '''
     assert len(relatorio) > 0
-   
-    # Calcula o lucro de cada vendedor
-    cada_vendedor = []
-    for x in relatorio:
-        lucro_vendedor(x)
-        cada_vendedor.append(lucro_vendedor(x))
+    cada_vendedor = repeticao_vendedor(relatorio)
 
-    # Caso o nome de um vendedor apareça mais de uma vez em *relatorio*, soma os lucros e a quantidade deles 
-    for cv in range(len(cada_vendedor)):
-        for v in range(cv + 1, len(cada_vendedor)):
-            if cada_vendedor[cv].nome == cada_vendedor[v].nome:
-                cada_vendedor[cv].lucro_por_vendedor = cada_vendedor[cv].lucro_por_vendedor + \
-                cada_vendedor[v].lucro_por_vendedor
-                cada_vendedor[cv].soma_quantidades = cada_vendedor[cv].soma_quantidades + \
-                cada_vendedor[v].soma_quantidades
-                cada_vendedor[v].lucro_por_vendedor = 0.0  # Zera o lucro das próximas vezes que o mesmo vendedor aparece.
-                cada_vendedor[v].soma_quantidades = 0.0  # Zera a quantidade das próximas vezes que o mesmo vendedor aparece
-            
-    # Define o ranking dos três vendedores que mais geraram lucro
+    ranking = []
     posicao1 = Vendedor_Premiado('',0,0.0)
     posicao2 = Vendedor_Premiado('',0,0.0)
     posicao3 = Vendedor_Premiado('',0,0.0)
     
-    # Define o vendedor da primeira posição
+    #Define o vendedor da primeira posição
     for vnd in range(len(cada_vendedor)):
         if cada_vendedor[vnd].lucro_por_vendedor > posicao1.lucro_por_vendedor and \
             cada_vendedor[vnd].lucro_por_vendedor > 0.0:
             posicao1 = cada_vendedor[vnd]
-        
+    ranking.append(posicao1)
     # Define o vendedor da segunda posição
     for vnd1 in range(len(cada_vendedor)): 
         if cada_vendedor[vnd1].lucro_por_vendedor > posicao2.lucro_por_vendedor and \
               cada_vendedor[vnd1].lucro_por_vendedor < posicao1.lucro_por_vendedor and \
                 cada_vendedor[vnd1].lucro_por_vendedor > 0.0:
             posicao2 = cada_vendedor[vnd1]
-    
+    ranking.append(posicao2)
     # Define o vendedor da terceira posição
     for vnd2 in range(len(cada_vendedor)):
         if cada_vendedor[vnd2].lucro_por_vendedor > posicao3.lucro_por_vendedor and \
             cada_vendedor[vnd2].lucro_por_vendedor < posicao2.lucro_por_vendedor and \
                 cada_vendedor[vnd2].lucro_por_vendedor > 0.0:
             posicao3 = cada_vendedor[vnd2]
-    
-    lista_premiados = [posicao1, posicao2, posicao3]
-    
-    return lista_premiados
+    ranking.append(posicao3)
+    return ranking
 
 
 

@@ -189,14 +189,15 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     [Vendedor_Premiado(nome='Lucas', lucro_por_vendedor=100000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Fabio',TipoProduto.PAINEL,16000,80.00),Nota('Jair',TipoProduto.CHAPA,12000,45.00)])
     [Vendedor_Premiado(nome='Fabio', lucro_por_vendedor=80000.0), Vendedor_Premiado(nome='Jair', lucro_por_vendedor=60000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
+    
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00)])        
     [Vendedor_Premiado(nome='Marcia', lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='Paulo', lucro_por_vendedor=170000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Marcia',TipoProduto.CHAPA,24000,45.00),Nota('Paulo',TipoProduto.BOBINA,34000,55.00),Nota('Marcia',TipoProduto.PAINEL,16000,80.00),Nota('Paulo',TipoProduto.CHAPA,8000,45.00)])
     [Vendedor_Premiado(nome='Paulo', lucro_por_vendedor=210000.0), Vendedor_Premiado(nome='Marcia', lucro_por_vendedor=200000.0), Vendedor_Premiado(nome='', lucro_por_vendedor=0.0)]
     >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00)]) 
     [Vendedor_Premiado(nome='Lucia', lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', lucro_por_vendedor=145000.0)]
-    >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.BOBINA,28000,55.00)])
-    [Vendedor_Premiado(nome='Lucia', lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', lucro_por_vendedor=145000.0)]
+    >>> premiados([Nota('Carlos',TipoProduto.BOBINA,30000,55.00),Nota('Luan',TipoProduto.CHAPA,28000,45.00), Nota('Lucia',TipoProduto.PAINEL,32000,80.00), Nota('Fabricio',TipoProduto.CHAPA,29000,45.00), Nota('Paulo',TipoProduto.PAINEL,16000,55.00)])
+    [Vendedor_Premiado(nome='pAU', lucro_por_vendedor=160000.0), Vendedor_Premiado(nome='Carlos', lucro_por_vendedor=150000.0), Vendedor_Premiado(nome='Fabricio', lucro_por_vendedor=145000.0)]
     '''
 
     assert len(relatorio) > 0
