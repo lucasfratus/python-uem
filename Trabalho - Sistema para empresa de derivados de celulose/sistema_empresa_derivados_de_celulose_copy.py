@@ -143,30 +143,30 @@ def receita_lucro(relatorio: list[Nota]) -> float:
     
     Exemplos:
     >>> receita_lucro([])
-    Receita = 0, Lucro = 0
+    0.0, 0.0
     >>> receita_lucro([Nota('Claudio',TipoProduto.BOBINA,5000,50.00)])
-    Receita = 250000.0, Lucro = 0.0
+    250000.0, 0.0
     >>> receita_lucro([Nota('Lucas',TipoProduto.BOBINA,10000,53.00)])
-    Receita = 530000.0, Lucro = 30000.0
+    530000.0, 30000.0
     >>> receita_lucro([Nota('Pedro',TipoProduto.PAINEL,5000,85.00),Nota('Pedro',TipoProduto.CHAPA,4000,45.00)])
-    Receita = 605000.0, Lucro = 70000.0
+    605000.0, 70000.0
     >>> receita_lucro([Nota('Pedro',TipoProduto.BOBINA,1500,55.00),Nota('Daniela',TipoProduto.PAINEL,3000,80.00),Nota('Jonas',TipoProduto.CHAPA,1000,41.00)])
-    Receita = 363500.0, Lucro = 23500.0
+    363500.0, 23500.0
     >>> receita_lucro([Nota('Jaime',TipoProduto.PAINEL,2530,80.00),Nota('Daniel',TipoProduto.BOBINA,1000,52.00),Nota('Jaime',TipoProduto.PAINEL,2000,85.00)])
-    Receita = 424400.0, Lucro = 34650.0
+    424400.0, 34650.0
     '''
     receita = 0
-    lucro = 0
+    lucro_total = 0
 
     for x in relatorio:
         receita = receita + x.quantidade * x.valor_com_desconto
         if x.produto == TipoProduto.BOBINA:
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
+            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_BOBINA)
         elif x.produto == TipoProduto.CHAPA:
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
+            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
-            lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
-    return print('Receita = ', receita, ', Lucro = ', lucro, sep='')
+            lucro_total = x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
+    return receita, lucro_total
 
 @dataclass
 class Vendedor_Premiado:
@@ -224,6 +224,18 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
     posicao2 = Vendedor_Premiado('',0.0)
     posicao3 = Vendedor_Premiado('',0.0)
 
+    # Define o melhor vendedor
+    ranking = []
+    melhor = Vendedor_Premiado('',0.0)
+    for x in range(len(cada_vendedor)):
+        for y in range(len(cada_vendedor)):
+            if cada_vendedor[x].lucro_por_vendedor > cada_vendedor[y].lucro_por_vendedor and \
+                cada_vendedor[x].lucro_por_vendedor > melhor.lucro_por_vendedor:
+                melhor = cada_vendedor[x]
+                ranking.append(melhor)
+    
+
+    '''
     # Define o vendedor da primeira posição
     for vnd in range(len(cada_vendedor)):
         if cada_vendedor[vnd].lucro_por_vendedor > posicao1.lucro_por_vendedor:
@@ -240,10 +252,10 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
         if cada_vendedor[vnd2].lucro_por_vendedor > posicao3.lucro_por_vendedor and \
             cada_vendedor[vnd2].lucro_por_vendedor < posicao2.lucro_por_vendedor:
             posicao3 = cada_vendedor[vnd2] 
+    '''
     
-    lista_premiados = [posicao1, posicao2, posicao3]
             
-    return lista_premiados
+    return ranking[:2]
 
 
 

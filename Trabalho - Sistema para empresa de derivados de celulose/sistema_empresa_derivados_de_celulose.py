@@ -166,7 +166,7 @@ def receita_lucro(relatorio: list[Nota]) -> float:
             lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_CHAPA)
         else: # x.produto == Tipo.Produto.PAINEL
             lucro = lucro + x.quantidade * (x.valor_com_desconto - CUSTO_PAINEL) 
-    return print('Receita = ', receita, ', Lucro = ', lucro, sep='')
+    return receita, lucro
 
 @dataclass
 class Vendedor_Premiado:
@@ -214,8 +214,6 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
         cada_vendedor.append(Vendedor_Premiado(x.vendedor,lucro_por_vendedor))
 
     # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
-    #indice_repetidos = []
-        # Identifica se existem vendedores repetidos. Se existe, soma o lucro deles.
     indice_repetidos_desordenados = []
     for y in range(len(cada_vendedor)):
         for z in range(y + 1,len(cada_vendedor)):
@@ -237,23 +235,19 @@ def premiados(relatorio: list[Nota]) -> list[Vendedor_Premiado]:
             for y in range(indice_repetidos_desordenados):
                 indice_repetidos_desordenados[:y] + indice_repetidos_desordenados[y+1:]
             indice_repetidos_ordenados.append(menor_valor)
-    
-    
-    #for y in range(len(cada_vendedor)):
-        #for z in range(y + 1,len(cada_vendedor)):
-            #if cada_vendedor[y].nome == cada_vendedor[z].nome:
-                #cada_vendedor[y].lucro_por_vendedor = cada_vendedor[y].lucro_por_vendedor + cada_vendedor[z].lucro_por_vendedor
-                #indice_repetidos.append(z)
 
-    #for i in range(len(indice_repetidos)):
-        #cada_vendedor = cada_vendedor[:indice_repetidos[i]] + cada_vendedor[indice_repetidos[i] + 1:]
-        #for k in range(i+1,len(indice_repetidos)):
-            #indice_repetidos[k] = indice_repetidos[k] - 1
 
     # Define o ranking dos três vendedores que mais geraram lucro
     posicao1 = Vendedor_Premiado('',0.0)
     posicao2 = Vendedor_Premiado('',0.0)
     posicao3 = Vendedor_Premiado('',0.0)
+
+    # Define o ranking dos vendedores
+    for x in range(len(cada_vendedor)):
+        for y in range(x + 1,)
+
+
+
 
     # Define o vendedor da primeira posição
     for vnd in range(len(cada_vendedor)):
