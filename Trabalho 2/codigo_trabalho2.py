@@ -105,7 +105,6 @@ def nota_cada_alternativa(resposta:int) -> float:
         valor_cada_alternativa = 1.2
     return valor_cada_alternativa
 
-
 def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     '''
     Calcula a nota de uma prova, levando em conta as respostas candidato e o gabarito da prova, não levando em conta a nota da redação.
@@ -125,7 +124,7 @@ def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     >>> calcular_nota(Candidato(134698,115,[12,16,4,2,16], [13,16,5,2,31]) # 4.0 + 6.0 + 3.0 + 6.0 + 1.2
     20.2
     '''  
-    nota = 0
+    nota = 0.0
     for x in range(len(prova.respostas)):
         somatoria_respostas = somatorio_alternativas(prova.respostas[x])
         somatoria_gabarito = somatorio_alternativas(gabarito[x])
@@ -137,7 +136,7 @@ def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
             if somatoria_respostas[y] in somatoria_gabarito:
                 nota = nota + nota_alt
             else:
-                nota_alt = 0
+                nota_alt = 0.0
     return nota
 
 def desempenho_vestibular(lista_provas: list[Candidato], gabarito: list[int]) -> list[NotaCandidato]:
