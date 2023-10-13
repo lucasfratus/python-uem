@@ -86,6 +86,8 @@ def nota_cada_alternativa(resposta:int) -> float:
     >>> nota_cada_alternativa(28)
     2.0
     >>> nota_cada_alternativa(13)
+    2.0
+    >>> nota_cada_alternativa(18)
     3.0
     >>> nota_cada_alternativa(0)
     6.0
@@ -119,9 +121,9 @@ def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     28.0
     >>> calcular_nota(Candidato(134698,115,[14,18,6,16,24]), [13,16,5,2,18])
     0.0
-    >>> calcular_nota(Candidato(134698,115,[12,16,4,2,16], [13,16,5,2,18]) # 4.0 + 6.0 + 3.0 + 6.0 + 3.0
+    >>> calcular_nota(Candidato(134698,115,[12,16,4,2,16]), [13,16,5,2,18]) 
     22.0
-    >>> calcular_nota(Candidato(134698,115,[12,16,4,2,16], [13,16,5,2,31]) # 4.0 + 6.0 + 3.0 + 6.0 + 1.2
+    >>> calcular_nota(Candidato(134698,115,[12,16,4,2,16]), [13,16,5,2,31]) 
     20.2
     '''  
     nota = 0.0
@@ -139,6 +141,25 @@ def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
                 nota_alt = 0.0
     return nota
 
+def ordenar_lista(lista_provas: list[NotaCandidato]) -> list[NotaCandidato]:
+    '''
+    Ordena *lista_provas* em ordem decrescente de notas.
+    Não pode ser uma lista vazia.
+    Exemplos:
+    '''
+    lista_ordenada = []
+    maior_nota = NotaCandidato(0,0.0)
+    if len(lista_provas) == 0:
+        return lista_provas
+    else:
+        for x in range(len(lista_provas)):
+            if lista_provas[x].nota_final > maior_nota.nota_final:
+                maior_nota = lista_provas[x]
+                indice_maior = x
+                lista_ordenada.append(lista_provas[x])
+                lista_provas = lista_provas[:indice_maior] + lista_provas[indice_maior + 1:]
+        return ordenar_lista(lista_provas)
+
 def desempenho_vestibular(lista_provas: list[Candidato], gabarito: list[int]) -> list[NotaCandidato]:
     '''
     Devolve uma nova lista a partir de *lista_provas*, com a nota de cada candidato não desclassificado da redação já calculada,
@@ -148,10 +169,10 @@ def desempenho_vestibular(lista_provas: list[Candidato], gabarito: list[int]) ->
     Para um candidato ter sua nota calculada, ele deve estar classificado na redação, ou seja, não tirou zero nela.
     Cada nota final deve estar acompanhada do código de identificação de cada participante.
     Exemplos:
-    >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18]),[13,16,5,2,18]])
-    [NotaCandidato(134698,145.0)]
+    >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18])],[13,16,5,2,18])
+    [NotaCandidato(codigo=134698, nota_final=145.0)]
     >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18]),Candidato(256469,119.0,[13,16,6,2,18])],[13,16,5,2,18])
-    [NotaCandidato(134698,145.0),NotaCandidato(256469,143.0)]
+    [NotaCandidato(codigo=134698, nota_final=145.0), NotaCandidato(codigo=256469, nota_final=143.0)]
     '''
     lista_resultados = []
     for x in lista_provas:
