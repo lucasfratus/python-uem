@@ -8,7 +8,7 @@
 
 def determina_menor_quantidade(lst: list[int], valor_desejado: int) -> int:
     '''
-    Determina a menor quantidade de elementos de *lst* que precisam ser somado para que seja maior que *valor_dese
+    Determina a menor quantidade de elementos de *lst* que precisam ser somados para que seja maior que *valor_dese
     jado*. Caso não atingir, devolve -1.
     Exemplos:
     >>> determina_menor_quantidade([],7)
@@ -21,32 +21,23 @@ def determina_menor_quantidade(lst: list[int], valor_desejado: int) -> int:
     1
     '''
     # ordena a lista
-    maior = 0
-    indice_maior = 0
-    lista_definitiva = []
-    for x in range(len(lst)):
-        for y in range(x, len(lst)):
-            if lst[x] > maior and lst[x] > lst[y]:
-                maior = lst[x]
-                lista_definitiva.append(maior)
-                indice_maior = x 
-                lst = lst[:indice_maior] + lst[indice_maior+1:]
-            else
-    
-    # função
     i = 0
+    lista_definitiva = []
+    while i < len(lst):
+        maior = lst[0]
+        for x in range(len(lst)):
+            if lst[x] > maior:
+                maior = lst[x]
+                indice_maior = x
+        i = i+1
+        lista_definitiva.append(maior)
+        lst = lst[:indice_maior] + lst[indice_maior + 1:]
+    i2 = 0 
     soma = 0
-    quantidade = 0
-    while i < len(lista_definitiva):
-        if soma <= valor_desejado:
-            soma = soma + lista_definitiva[i]
-            quantidade = quantidade + 1
-        if soma <= valor_desejado and i == len(lista_definitiva) - 1:
-            quantidade = -1
-        i = i + 1
-    return quantidade
-
-
-
-
+    while i2 < len(lista_definitiva) and soma < valor_desejado:
+        soma = soma + lista_definitiva[i2]
+        i2 = i2 + 1
+    if soma < valor_desejado:
+        i2 = -1
+    return i2
 
