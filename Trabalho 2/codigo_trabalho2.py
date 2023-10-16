@@ -95,18 +95,31 @@ def nota_cada_alternativa(resposta:int) -> float:
     6.0
     '''
     divisao = somatorio_alternativas(resposta)
-    if len(divisao) == 0 or len(divisao) == 1:
+    if len(divisao) == 0:
         valor_cada_alternativa = 6.0
-    if len(divisao) == 2:
-        valor_cada_alternativa = 3.0  
-    if len(divisao) == 3:
-        valor_cada_alternativa = 2.0  
-    if len(divisao) == 4:
-        valor_cada_alternativa = 1.5 
-    if len(divisao) == 5: 
-        valor_cada_alternativa = 1.2
+    else:
+        valor_cada_alternativa = 6.0 / len(divisao)
     return valor_cada_alternativa
-def soma_nota(list)
+
+def soma_nota(lst: list[float]) -> float:
+    '''
+    Soma as notas de *lst*. *lst* não pode ser uma lista vazia.
+    Exemplos:
+    >>> soma_nota([1.2, 1.2, 1.2, 1.2, 1.2])
+    6.0
+    >>> soma_nota([2.0, 0.0, 0.0, 0.0, 2.0])
+    4.0
+    >>> soma_nota([0.0, 0.0, 0.0, 0.0, 0.0])
+    0.0
+    '''
+    nota_somada = 0.0
+    for x in range(len(lst)):
+        if x == 0:
+            nota_somada = lst[x]
+        else:
+            nota_somada = lst[x] + soma_nota(lst[:x])
+    return nota_somada
+
 
 def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     '''
@@ -131,35 +144,51 @@ def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     for x in range(len(prova.respostas)):
         somatoria_respostas = somatorio_alternativas(prova.respostas[x])
         somatoria_gabarito = somatorio_alternativas(gabarito[x])
-        nota_alt = nota_cada_alternativa(gabarito[x])
+        nota_alt = [] # representa uma lista com os valores de cada alternativa
+        nota_alt.append(nota_cada_alternativa(gabarito[x])) # adiciona o valor de cada alternativa em nota_alt
         if somatoria_respostas == [] and somatoria_gabarito == []:
             somatoria_respostas = [0]
             somatoria_gabarito = [0]
         for y in range(len(somatoria_respostas)):
-            if somatoria_respostas[y] in somatoria_gabarito:
-                nota = nota + nota_alt
-            else:
-                nota_alt = 0.0
+            if somatoria_respostas[y] not in somatoria_gabarito:
+                nota_alt = [0.0]
+            elif somatoria_respostas[y] in somatoria_gabarito:
+                nota = soma_nota(nota_alt) + nota
     return nota
 
-def ordenar_lista(lista_provas: list[NotaCandidato]) -> list[NotaCandidato]:
+def remover_redacao_zerada(lista_provas: list[Candidato]):
+    '''
+    Remove o candidato de *lista_provas* que foi desclassificado da prova, ou seja, tirou zero na redação
+    '''
+    i = 0
+    while i < len(lista_provas):
+        t = lista_provas[i]
+        if lista_provas[i].nota_redacao == 0.0:
+            lista_provas[i] = lista_provas[len(lista_provas) - 1]
+            lista_provas[len(lista_provas) - 1] = t
+        i = i + 1    
+
+def ordenar_lista(lista_provas: list[NotaCandidato]):
     '''
     Ordena *lista_provas* em ordem decrescente de notas.
     Não pode ser uma lista vazia.
     Exemplos:
+    >>> x = [NotaCandidato(codigo=134698, nota_final=145.0), NotaCandidato(codigo=256469, nota_final=143.0)]
+    >>> ordenar_lista(x)
+    >>> x
+    [NotaCandidato(codigo=134698, nota_final=145.0), NotaCandidato(codigo=256469, nota_final=143.0)]
     '''
-    lista_ordenada = []
-    maior_nota = NotaCandidato(0,0.0)
-    if len(lista_provas) == 0:
-        return lista_provas
-    else:
-        for x in range(len(lista_provas)):
-            if lista_provas[x].nota_final > maior_nota.nota_final:
-                maior_nota = lista_provas[x]
-                indice_maior = x
-                lista_ordenada.append(lista_provas[x])
-                lista_provas = lista_provas[:indice_maior] + lista_provas[indice_maior + 1:]
-        return ordenar_lista(lista_provas)
+    assert len(lista_provas) > 0
+    x = 0
+    while x < len(lista_provas):
+        k = lista_provas[x]
+        melhor_nota = lista_provas[x].nota_final
+        for y in range(x + 1, len(lista_provas)):
+            if lista_provas[y].nota_final > melhor_nota:
+                melhor_nota = lista_provas[y].nota_final
+                lista_provas[x] = lista_provas[y]
+                lista_provas[y] = k
+        x = x + 1
 
 def desempenho_vestibular(lista_provas: list[Candidato], gabarito: list[int]) -> list[NotaCandidato]:
     '''
@@ -169,15 +198,22 @@ def desempenho_vestibular(lista_provas: list[Candidato], gabarito: list[int]) ->
     o gabarito da prova.
     Para um candidato ter sua nota calculada, ele deve estar classificado na redação, ou seja, não tirou zero nela.
     Cada nota final deve estar acompanhada do código de identificação de cada participante.
+    Caso haja um empate de notas, o que aparecer na lista por ultimo será o que estará na frente do outro candidato que empatou com ele.
     Exemplos:
     >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18])],[13,16,5,2,18])
     [NotaCandidato(codigo=134698, nota_final=145.0)]
     >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18]),Candidato(256469,119.0,[13,16,6,2,18])],[13,16,5,2,18])
     [NotaCandidato(codigo=134698, nota_final=145.0), NotaCandidato(codigo=256469, nota_final=143.0)]
+    >>> desempenho_vestibular([Candidato(134698,115.0,[13,16,5,2,18]), Candidato(777777,120.0,[13,16,5,2,18])],[13,16,5,2,18])
+    [NotaCandidato(codigo=777777, nota_final=150.0), NotaCandidato(codigo=134698, nota_final=145.0)]
+    >>> desempenho_vestibular([Candidato(134698,114.0,[13,16,5,2,18]), Candidato(777777,120.0,[14,16,5,2,18]), Candidato(123456,120.0,[13,16,5,2,18])],[13,16,5,2,18])
+    [NotaCandidato(codigo=123456, nota_final=150.0), NotaCandidato(codigo=777777, nota_final=144.0), NotaCandidato(codigo=134698, nota_final=144.0)]
+    
     '''
     lista_resultados = []
     for x in lista_provas:
         nota_somada_candidato = calcular_nota(x,gabarito) + x.nota_redacao
         lista_resultados.append(NotaCandidato(x.codigo,nota_somada_candidato))   
+        ordenar_lista(lista_resultados)
     return lista_resultados
 
