@@ -106,6 +106,7 @@ def nota_cada_alternativa(resposta:int) -> float:
     if len(divisao) == 5: 
         valor_cada_alternativa = 1.2
     return valor_cada_alternativa
+def soma_nota(list)
 
 def calcular_nota(prova: Candidato, gabarito: list[int]) -> float:
     '''
